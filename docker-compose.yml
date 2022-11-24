@@ -1,0 +1,47 @@
+version: '3.6'
+
+services:
+  icb-chain-db:
+    image: mongo:4.2.3-bionic
+    container_name: icbchaindb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_DATABASE=${MONGO_ROOT_DATABASE}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_USERNAME=${MONGO_INITDB_USERNAME}
+      - MONGO_INITDB_PASSWORD=${MONGO_INITDB_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    volumes:
+      # seeding scripts
+      - ./config/mongo/mongo-entrypoint:/docker-entrypoint-initdb.d
+      # named volumes
+      - ./config/mongo/mongodb:/data/db
+      - ./config/mongo/mongoconfig:/data/configdb
+    networks:
+      - mongo_net
+
+  icb-network:
+    # image: docker-dev.icbcrypto.services/icb-network-cahin-api:latest
+    build: 
+      context: ./icb.networkchain/src
+      dockerfile: Dockerfile
+    container_name: icb-network-cahin-api
+    ports: 
+      - 5030:5030
+      - 5031:5031
+    environment:
+      - DBSetting__ConnectionString=mongodb://${MONGO_INITDB_USERNAME}:${MONGO_INITDB_PASSWORD}@icbchaindb:27017
+      - DBSetting__DatabaseName=${MONGO_INITDB_DATABASE}
+      - GRPC__WEB_PORT=${GRPC__WEB_PORT}
+      - GRPC__PORT=${GRPC__PORT}
+      - AppEnv__Passphrase=${AppEnv__Passphrase}
+      - AppEnv__NodeAddress=${AppEnv__NodeAddress}
+      - AppEnv__BootstrapPeers=${AppEnv__BootstrapPeers}
+    networks:
+      - mongo_net
+
+networks:
+  mongo_net:
+    driver: bridge

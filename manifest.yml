@@ -1,0 +1,8 @@
+name: ICBChainService
+
+hosts:
+- "icb-chain-local.com"
+- "www.icb-chain-local.com"
+- "grafana.icb-chain-local.com"
+- "prometheus.icb-chain-local.com.com"
+- "jaeger.icb-chain-local.com"
