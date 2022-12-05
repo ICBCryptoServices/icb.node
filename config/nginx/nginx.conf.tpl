@@ -62,6 +62,18 @@ http {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header Host $host;
       }
+
+      location /db {
+        proxy_pass http://mongoexpress;
+        proxy_read_timeout    120;
+        proxy_connect_timeout 90;
+        proxy_redirect        off;
+        client_max_body_size 8G;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+      }
     }
 
     server {

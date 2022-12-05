@@ -20,7 +20,9 @@ services:
       - ./config/mongo/mongodb:/data/db
       - ./config/mongo/mongoconfig:/data/configdb
     networks:
-      - mongo_net
+       mongo_net:
+        aliases:
+          - icb-chain-db
 
   icb-network:
     image: docker-dev.icbcrypto.services/icb-network-cahin-api:latest
@@ -37,7 +39,44 @@ services:
       - AppEnv__NodeAddress=${AppEnv__NodeAddress}
       - AppEnv__BootstrapPeers=${AppEnv__BootstrapPeers}
     networks:
-      - mongo_net
+      mongo_net:
+        aliases:
+          - icb-network
+  
+  mongoexpress:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8091:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=icbchaindb
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_ROOT_USER}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_ROOT_PASSWORD}
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
+    depends_on:
+      - icb-chain-db
+    networks:
+       mongo_net:
+        aliases:
+          - mongoexpress
+
+  nginx: 
+    image: nginx:latest
+    container_name: icb-wallet-nginx-proxy
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    restart: always
+    ports: 
+      - 443:443
+      - 80:80
+    depends_on:
+     - icb-network
+     - icb-chain-db
+    networks:
+      mongo_net:
 
 networks:
   mongo_net:
