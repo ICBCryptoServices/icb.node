@@ -62,6 +62,7 @@ http {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header Host $host;
       }
+<<<<<<< HEAD
     }
 
     server {
@@ -72,4 +73,8 @@ http {
             grpc_pass grpcs://dev;
     }
 }
+=======
+
+    }
+>>>>>>> 47cf8d430da728a5f4a4905c5744bae88002dc35
 }
