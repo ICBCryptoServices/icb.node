@@ -1,0 +1,6 @@
+config/nginx/ssl/ssl.*
+config/nginx/nginx.config
+env.config
+.env
+config/mongo/*.*
+config/monitoring/*.*
