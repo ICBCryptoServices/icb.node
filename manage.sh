@@ -14,19 +14,19 @@ function init_env () {
   local TEMPATE_VARS
   local ARGS=()
   # discover template variables
-  eval "TEMPLATE_VARS=($(grep -o '{{[^}]\+}}' config/nginx/nginx.conf.tpl | LC_ALL=C sort -u))"
+  eval "TEMPLATE_VARS=($(grep -o '{{[^}]\+}}' nginx/nginx.conf.tpl | LC_ALL=C sort -u))"
   # dynamically create sed arguments based on discovered template variables and match them to environment variables
   for x in "${TEMPLATE_VARS[@]//[{\}]/}"; do
     ARGS+=(-e "$(eval "echo \"s#{{$x}}#\${$x}#g\"")")
   done
-  sed "${ARGS[@]}" -- "${BASE_DIR}/config/nginx/nginx.conf.tpl" > "${BASE_DIR}/config/nginx/nginx.conf"
+  sed "${ARGS[@]}" -- "${BASE_DIR}/nginx/nginx.conf.tpl" > "${BASE_DIR}/nginx/nginx.conf"
 
   echo "Updating nginx.conf"
 }
 
 
 function check_ssl_key () {
-  if [[ -f "${BASE_DIR}/config/nginx/ssl/ssl.key"  &&  -f "${BASE_DIR}/config/nginx/ssl/ssl.crt" ]]; then
+  if [[ -f "${BASE_DIR}/nginx/ssl/ssl.key"  &&  -f "${BASE_DIR}/nginx/ssl/ssl.crt" ]]; then
     echo "SSL keys file found, continue..."
   else
     echo "No ssl files found. Exiting"
