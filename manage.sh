@@ -14,7 +14,7 @@ function init_env () {
   local TEMPATE_VARS
   local ARGS=()
   # discover template variables
-  eval "TEMPLATE_VARS=($(grep -o '{{[^}]\+}}' config/nginx/nginx.conf.tpl | LC_ALL=C sort -u))"
+  eval "TEMPLATE_VARS=($(grep -o '{{[^}]\+}}'config/nginx/nginx.conf.tpl | LC_ALL=C sort -u))"
   # dynamically create sed arguments based on discovered template variables and match them to environment variables
   for x in "${TEMPLATE_VARS[@]//[{\}]/}"; do
     ARGS+=(-e "$(eval "echo \"s#{{$x}}#\${$x}#g\"")")
