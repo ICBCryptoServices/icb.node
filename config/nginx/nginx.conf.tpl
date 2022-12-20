@@ -78,10 +78,10 @@ http {
 
     server {
         listen 5031 ssl http2;
-        ssl_certificate /tmp/server.crt;  #Enter you certificate location 
-        ssl_certificate_key /tmp/server.key;
-        location /helloworld.Greeter {
-            grpc_pass grpcs://dev;
+        ssl_certificate           /etc/nginx/ssl/ssl.crt;
+        ssl_certificate_key       /etc/nginx/ssl/ssl.key;
+        location /grpc {
+            grpc_pass grpcs://icb-network:5031;
+        }
     }
-}
 }
