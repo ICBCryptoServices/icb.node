@@ -77,7 +77,7 @@ http {
     }
 
     server {
-        listen 5031 ssl http2;
+        listen 5002 ssl http2;
         ssl_certificate           /etc/nginx/ssl/ssl.crt;
         ssl_certificate_key       /etc/nginx/ssl/ssl.key;
         location /grpc {
