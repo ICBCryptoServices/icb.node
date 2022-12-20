@@ -1,5 +1,5 @@
-config/nginx/ssl/ssl.*
-config/nginx/nginx.config
+nginx/ssl/ssl.*
+nginx/nginx.config
 env.config
 .env
 config/mongo/*.*
