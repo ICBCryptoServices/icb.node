@@ -52,7 +52,7 @@ http {
       ssl_stapling_verify       on;
 
       location / {
-        proxy_pass http://icb-network;
+        proxy_pass http://icb-network:5030;
         proxy_read_timeout    120;
         proxy_connect_timeout 90;
         proxy_redirect        off;
@@ -64,7 +64,7 @@ http {
       }
 
       location /db {
-        proxy_pass http://mongoexpress;
+        proxy_pass http://mongo-express:8081;
         proxy_read_timeout    120;
         proxy_connect_timeout 90;
         proxy_redirect        off;
@@ -80,8 +80,8 @@ http {
         listen 5002 ssl http2;
         ssl_certificate           /etc/nginx/ssl/ssl.crt;
         ssl_certificate_key       /etc/nginx/ssl/ssl.key;
-        location /grpc {
-            grpc_pass grpcs://icb-network:5031;
+        location / {
+            grpc_pass grpc://icb-network:5031;
         }
     }
 }
