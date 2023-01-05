@@ -9,6 +9,8 @@ events {
 }
 
 http {
+   
+    include conf.d/grpc_gateway.conf
 
     log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
                       '$status $body_bytes_sent "$http_referer" '
@@ -24,16 +26,33 @@ http {
 
     server_names_hash_bucket_size  64;
 
-    server {
-        listen         80;
-        server_name    {{SERVER_NAME}};
-
-        return         301 https://$server_name$request_uri;
+    upstream restapi {
+        server icb-network:5030;
+    }
+    upstream grpcapi {
+        server icb-network:5031;
     }
 
-
     server {
-      listen       *:443 ssl;
+        listen         80 http2;
+        server_name    {{SERVER_NAME}};
+         # Routing
+
+        location / {
+          return         301 https://$server_name$request_uri;
+        }
+        location /grpc/ {
+            grpc_pass grpc://grpcapi;
+        }
+        
+        # Error responses
+        include conf.d/errors.grpc_conf; # gRPC-compliant error responses
+        default_type application/grpc;   # Ensure gRPC for all error responses
+        
+    }
+  
+    server {
+      listen       *:443 ssl http2;
       server_name {{SERVER_NAME}};
 
       ssl on;
@@ -50,9 +69,9 @@ http {
       ssl_prefer_server_ciphers on;
       ssl_stapling              on;
       ssl_stapling_verify       on;
-
+ 
       location / {
-        proxy_pass http://icb-network:5030;
+        proxy_pass http://restapi;
         proxy_read_timeout    120;
         proxy_connect_timeout 90;
         proxy_redirect        off;
@@ -74,14 +93,15 @@ http {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header Host $host;
       }
-    }
+      
+      location /grpc/ {
+         grpc_pass grpc://grpcapi;
+      }
+        
+        # Error responses
+        include conf.d/errors.grpc_conf; # gRPC-compliant error responses
+        default_type application/grpc;   # Ensure gRPC for all error responses
+        
 
-    server {
-        listen 5002 ssl http2;
-        ssl_certificate           /etc/nginx/ssl/ssl.crt;
-        ssl_certificate_key       /etc/nginx/ssl/ssl.key;
-        location / {
-            grpc_pass grpc://icb-network:5031;
-        }
     }
 }
