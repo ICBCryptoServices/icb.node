@@ -1,0 +1,31 @@
+// Created by I Putu Kusuma Negara. markbrain2013[at]gmail.com
+// 
+// Ubudkuscoin is free software distributed under the MIT software license,
+// Redistribution and use in source and binary forms with or without
+// modifications are permitted.
+
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "ICB.Chain.Domain.Network";
+package icbmine;
+service MineService {
+  rpc MineNetwork(AddressParam) returns (MineReply);
+  rpc AddStack(AddressParam) returns (SatckReply);
+  rpc AutoMainStart(google.protobuf.Empty) returns  (MineReply);
+  rpc AutoMainStop(google.protobuf.Empty) returns  (MineReply);
+}
+
+message AddressParam{
+  string address = 1;
+}
+
+message MineReply{
+  int32 status = 1;
+  string message = 2;
+}	
+
+message SatckReply{
+  int32 status = 1;
+  string message = 2;
+} 
