@@ -25,16 +25,6 @@ http {
     server_names_hash_bucket_size  64;
     
     server {
-        listen         80 http2;
-        server_name    {{SERVER_NAME}};
-
-      location / {    
-          grpc_pass grpc://icb-network:5031;
-          #health_check type=grpc grpc_status=12; # 12=unimplemented
-      }
-    }
-
-    server {
         listen         80;
         server_name    {{SERVER_NAME}};
 
@@ -42,26 +32,26 @@ http {
     }
 
     server {
-      listen              443 ssl http2;
+      listen              1433  http2;
       server_name         {{SERVER_NAME}}; 
       
-      ssl on;
+      #ssl on;
 
-      ssl_certificate           /etc/nginx/ssl/ssl.crt;
-      ssl_certificate_key       /etc/nginx/ssl/ssl.key;
+      #ssl_certificate           /etc/nginx/ssl/ssl.crt;
+      #ssl_certificate_key       /etc/nginx/ssl/ssl.key;
 
-      ssl_verify_client         off;
+      #ssl_verify_client         off;
 
-      ssl_session_cache         shared:SSL:10m;
-      ssl_session_timeout       10m;
-      ssl_protocols             TLSv1 TLSv1.1 TLSv1.2;
-      ssl_ciphers               ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA;
-      ssl_prefer_server_ciphers on;
-      ssl_stapling              on;
-      ssl_stapling_verify       on;
+      #ssl_session_cache         shared:SSL:10m;
+      #ssl_session_timeout       10m;
+      #ssl_protocols             TLSv1 TLSv1.1 TLSv1.2;
+      #ssl_ciphers               ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA;
+      #ssl_prefer_server_ciphers on;
+      #ssl_stapling              on;
+      #ssl_stapling_verify       on;
       
-      access_log /tmp/access.log main;
-      error_log /tmp/error.log error;
+      #access_log /tmp/access.log main;
+      #error_log /tmp/error.log error;
       
       location / {    
           grpc_pass grpc://icb-network:5031;
@@ -69,8 +59,8 @@ http {
       }
 
       # Error responses
-      include conf.d/errorsgrpc.conf; # gRPC-compliant error responses
-      default_type application/grpc;   # Ensure gRPC for all error responses
+      #include conf.d/errorsgrpc.conf; # gRPC-compliant error responses
+      #default_type application/grpc;   # Ensure gRPC for all error responses
     }
 
     server {
@@ -122,8 +112,8 @@ http {
       '' close;
     }
 
-    map $upstream_trailer_grpc_status $grpc_status {
-      default $upstream_trailer_grpc_status; # grpc-status is usually a trailer
-      ''      $sent_http_grpc_status; # Else use the header, whatever its source
-    }
+    #map $upstream_trailer_grpc_status $grpc_status {
+    #  default $upstream_trailer_grpc_status; # grpc-status is usually a trailer
+    #  ''      $sent_http_grpc_status; # Else use the header, whatever its source
+    #}
 }
