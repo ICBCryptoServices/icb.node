@@ -74,7 +74,7 @@ services:
     ports: 
       - 443:443
       - 80:80
-      - 1433:1433
+      #- 1433:1433
     depends_on:
      - icb-network
      - icb-chain-db
