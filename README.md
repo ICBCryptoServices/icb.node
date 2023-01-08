@@ -1,6 +1,6 @@
 
 
-# ![alt text](https://github.com/ICBCryptoServices/icb.wallet/blob/main/ICB-Logo.png?raw=true) icb.wallet
+# ![alt text](https://github.com/ICBCryptoServices/icb.wallet/blob/main/ICB-Logo.png?raw=true) icb.node
 This is distribute service ICB NODE that user can deploy own ICB node on to own server
 
 
